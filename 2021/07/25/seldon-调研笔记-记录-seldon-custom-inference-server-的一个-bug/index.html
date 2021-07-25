@@ -14,7 +14,7 @@
 <meta property="og:description" content="前言Seldon Core 目前是机器学习模型部署领域最受欢迎的方案之一，由 seldon 公司开源和维护。seldon 同时还是 kfserving 的项目深度参与者。这篇文章用来记录下我在调研 Seldon Core 时遇到的一个 bug。 我在做什么利用 Seldon Core 的 Custom Inference Server 机制向 Seldon Core 注册我构建的，用来加载 Lig">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-07-24T17:52:51.000Z">
-<meta property="article:modified_time" content="2021-07-25T16:31:19.246Z">
+<meta property="article:modified_time" content="2021-07-25T16:35:24.541Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -103,7 +103,7 @@
 
 <p>详情见我在 Seldon Core 项目提的 <a target="_blank" rel="noopener" href="https://github.com/SeldonIO/seldon-core/issues/3415">Issue</a>。</p>
 <h3 id="怎么解决的"><a href="#怎么解决的" class="headerlink" title="怎么解决的"></a>怎么解决的</h3><p>Seldon Core 的开发者反馈并没有复现我遇到的问题… </p>
-<p>后来在 Seldon Core <a target="_blank" rel="noopener" href="https://join.slack.com/t/istio/shared_invite/zt-o9zzc0xe-pmo22TRL5cajm2JY3QeqBg">Slack 社区</a> 问其它问题时给 alejandro 看了这个 Issue，alejandro 试了下但同样没有复现，我还以为是我哪里搞错了，详情见我我在 Slack 上和 alejandro 的 <a target="_blank" rel="noopener" href="https://seldondev.slack.com/archives/C8Y9A8G0Y/p1626770634184600?thread_ts=1626329435.123100&cid=C8Y9A8G0Y">讨论</a>。</p>
+<p>后来在 Seldon Core <a target="_blank" rel="noopener" href="https://join.slack.com/t/seldondev/shared_invite/zt-3wr7wfvl-LmRVGcwxsA47P9rPUYWcog">Slack 社区</a> 问其它问题时给 alejandro 看了这个 Issue，alejandro 试了下但同样没有复现，我还以为是我哪里搞错了，详情见我我在 Slack 上和 alejandro 的 <a target="_blank" rel="noopener" href="https://seldondev.slack.com/archives/C8Y9A8G0Y/p1626770634184600?thread_ts=1626329435.123100&cid=C8Y9A8G0Y">讨论</a>。</p>
 <p>经过对比 alejandro 和我的 seldondeployment 文件发现：Custom Inference Server 的确注册成功了，但它并不支持 <a target="_blank" rel="noopener" href="https://github.com/kubeflow/kfserving/blob/master/docs/predict-api/v2/required_api.md">kfserving v2</a> 协议，原因是 Seldon Core 在代码中少了一个判断条件。目前 Seldon Core 已经开了一个 <a target="_blank" rel="noopener" href="https://github.com/SeldonIO/seldon-core/pull/3418">PR</a> 修复了这个 Bug，估计会在 1.10.0 版本发布。</p>
 <p>至此问题解决，在 Seldon Core 1.10.0 发布前先将 Seldon Core 的一个 Pre-Package Inference Server 的镜像配置改成我构建的 Seldon-Lightgbm。</p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>Seldon Core 社区还是非常活跃，项目的维护者也会非常热心的回答各种使用者的问题，所以一般有什么问题及时和他们交流，总能及时解决。</p>
